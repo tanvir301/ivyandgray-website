@@ -1,0 +1,43 @@
+---
+import { getCollection, render } from "astro:content";
+import Base from "../layouts/Base.astro";
+import CallToAction from "../components/CallToAction.astro";
+
+const faqs = await Promise.all(
+  (await getCollection("faq")).sort((a, b) => a.data.order - b.data.order).map(async (f) => ({ ...f, ...(await render(f)) })),
+);
+---
+
+<Base
+  title="Frequently Asked Questions"
+  description="Answers to common questions about booking Ivy and Gray: the events we decorate, booking and deposits, design mockups, venues, and setup and takedown."
+>
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">FAQ</p>
+      <h1>Frequently asked questions</h1>
+      <p>
+        Everything you might want to know before booking. Don't see your question here? Ask us in your consultation.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <div class="faq">
+        {
+          faqs.map((f) => (
+            <details class="reveal">
+              <summary>{f.data.question}</summary>
+              <div class="prose">
+                <f.Content />
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CallToAction heading="Still have questions?" text="Book a consultation and we'll talk through your event, your venue and your ideas." />
+</Base>

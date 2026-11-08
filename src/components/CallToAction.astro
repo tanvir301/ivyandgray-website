@@ -1,0 +1,18 @@
+---
+interface Props {
+  heading?: string;
+  text?: string;
+}
+const {
+  heading = "Let's design your celebration",
+  text = "Tell us your dates, venues and vision. We'll set up a consultation and start on your design.",
+} = Astro.props;
+---
+
+<section class="cta-band">
+  <div class="container cta-inner reveal">
+    <h2>{heading}</h2>
+    <p>{text}</p>
+    <a href="/contact/" class="btn btn-light">Book a consultation</a>
+  </div>
+</section>

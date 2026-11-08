@@ -1,0 +1,28 @@
+---
+import { site, instagramUrl } from "../site.config";
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <img src="/logo-light.svg" alt="Ivy and Gray, Event Decor and Design" width="213" height="120" loading="lazy" />
+      {site.serviceArea && <p>Serving {site.serviceArea}</p>}
+    </div>
+    <nav class="footer-links" aria-label="Footer">
+      <a href="/services/">Services</a>
+      <a href="/portfolio/">Portfolio</a>
+      <a href="/about/">About</a>
+      <a href="/faq/">FAQ</a>
+      <a href="/contact/">Book a consultation</a>
+    </nav>
+    <div class="footer-contact">
+      {site.email && <a href={`mailto:${site.email}`}>{site.email}</a>}
+      {site.phone && <a href={`tel:${site.phone.replace(/[^\d+]/g, "")}`}>{site.phone}</a>}
+      {instagramUrl && <a href={instagramUrl} rel="noopener">Instagram @{site.instagram}</a>}
+    </div>
+  </div>
+  <div class="container footer-legal">
+    <p>© {year} {site.legalName}</p>
+  </div>
+</footer>

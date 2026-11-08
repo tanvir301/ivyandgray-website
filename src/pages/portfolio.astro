@@ -1,0 +1,45 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import Gallery from "../components/Gallery.astro";
+import Instagram from "../components/Instagram.astro";
+import CallToAction from "../components/CallToAction.astro";
+import { photosIn } from "../lib/images";
+
+const galleries = (await getCollection("portfolio"))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((g) => ({ ...g, photos: photosIn(`portfolio/${g.id}`) }));
+---
+
+<Base
+  title="Portfolio"
+  description="Photos of our reception, wedding morning, maiyan, mehndi, jaggo, gurdwara and celebration decor."
+>
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">Portfolio</p>
+      <h1>Our work</h1>
+      <p>A look at setups we've designed, built and installed for our families.</p>
+      <nav class="chips" aria-label="Galleries">
+        {galleries.map((g) => <a href={`#${g.id}`}>{g.data.title}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  {
+    galleries.map((g, i) => (
+      <section id={g.id} class={`section ${i % 2 ? "tinted" : ""}`}>
+        <div class="container">
+          <div class="section-head left reveal">
+            <h2>{g.data.title}</h2>
+            <p>{g.data.description}</p>
+          </div>
+          <Gallery photos={g.photos} group={g.id} label={g.data.title} folder={g.id} />
+        </div>
+      </section>
+    ))
+  }
+
+  <Instagram />
+  <CallToAction heading="Love what you see?" />
+</Base>

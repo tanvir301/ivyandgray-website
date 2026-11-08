@@ -1,0 +1,128 @@
+---
+import { Image } from "astro:assets";
+import { getCollection, render } from "astro:content";
+import Base from "../layouts/Base.astro";
+import Gallery from "../components/Gallery.astro";
+import Placeholder from "../components/Placeholder.astro";
+import Instagram from "../components/Instagram.astro";
+import CallToAction from "../components/CallToAction.astro";
+import { photosIn, photoNamed } from "../lib/images";
+
+const hero = photosIn("hero")[0];
+const packages = (await getCollection("packages")).sort((a, b) => a.data.order - b.data.order);
+const testimonials = await Promise.all(
+  (await getCollection("testimonials", (t) => !t.data.draft)).map(async (t) => ({ ...t, ...(await render(t)) })),
+);
+// The homepage shows reception work first, topped up from the other galleries.
+const featured = (await getCollection("portfolio"))
+  .sort((a, b) => a.data.order - b.data.order)
+  .flatMap((g) => photosIn(`portfolio/${g.id}`))
+  .slice(0, 6);
+
+---
+
+<Base announcement>
+  <section class={`hero ${hero ? "has-photo" : ""}`}>
+    {hero && <Image src={hero.src} alt="" class="hero-photo" widths={[800, 1400, 2000]} sizes="100vw" loading="eager" fetchpriority="high" />}
+    <div class="container hero-inner">
+      <img class="hero-logo" src="/logo-light.svg" alt="Ivy and Gray, Event Decor and Design" width="420" height="237" />
+      <h1>Crafted with heart. Designed with soul.</h1>
+      <p class="hero-sub">
+        Custom designed, built in our own warehouse and set up by our own crew. From the maiyan tent to the reception
+        stage.
+      </p>
+      <div class="hero-actions">
+        <a href="/contact/" class="btn btn-light">Book a consultation</a>
+        <a href="/portfolio/" class="btn btn-outline-light">See our work</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container pillars">
+      <div class="pillar reveal">
+        <h2 class="h3">Designed before the day</h2>
+        <p>Every setup starts as a visual mockup, so you see your decor and fine-tune it long before the event.</p>
+      </div>
+      <div class="pillar reveal">
+        <h2 class="h3">Built by our team</h2>
+        <p>Our backdrops, stages and pieces are built and kept in our own warehouse, not rented at the last minute.</p>
+      </div>
+      <div class="pillar reveal">
+        <h2 class="h3">Set up and taken down for you</h2>
+        <p>Our own crew handles every install and takedown, late nights included, so your family can enjoy the day.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tinted">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">What we do</p>
+        <h2>Decor for every celebration</h2>
+        <p>Weddings are our heart, but we design for every occasion, from your wedding week to birthdays, photoshoots and company parties.</p>
+      </div>
+      <div class="card-grid">
+        {
+          packages.map((p) => {
+            const photo = photoNamed("packages", p.id);
+            return (
+              <a href={`/services/#${p.id}`} class="card reveal">
+                {photo ? (
+                  <Image src={photo.src} alt={photo.alt} widths={[400, 700]} sizes="(max-width: 640px) 100vw, 33vw" />
+                ) : (
+                  <Placeholder label={p.data.title} ratio="3 / 2" />
+                )}
+                <div class="card-body">
+                  <h3>{p.data.title}</h3>
+                  <p>{p.data.summary}</p>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+      <p class="center"><a href="/services/" class="btn btn-primary">View packages and pricing</a></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Portfolio</p>
+        <h2>Recent work</h2>
+      </div>
+      <Gallery photos={featured} group="featured" label="Recent work" folder="reception" placeholders={6} />
+      <p class="center"><a href="/portfolio/" class="btn btn-primary">See the full portfolio</a></p>
+    </div>
+  </section>
+
+  {
+    testimonials.length > 0 && (
+      <section class="section">
+        <div class="container">
+          <div class="section-head reveal">
+            <p class="eyebrow">Kind words</p>
+            <h2>From our families</h2>
+          </div>
+          <div class="quotes">
+            {testimonials.map(({ data, Content }) => (
+              <figure class="quote reveal">
+                <blockquote>
+                  <Content />
+                </blockquote>
+                <figcaption>
+                  {data.name}
+                  {data.event && <span>, {data.event}</span>}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <Instagram />
+  <CallToAction />
+</Base>

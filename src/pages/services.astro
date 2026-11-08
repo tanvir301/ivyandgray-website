@@ -1,0 +1,109 @@
+---
+import { Image } from "astro:assets";
+import { getCollection, render } from "astro:content";
+import Base from "../layouts/Base.astro";
+import Placeholder from "../components/Placeholder.astro";
+import CallToAction from "../components/CallToAction.astro";
+import HowItWorks from "../components/HowItWorks.astro";
+import { photoNamed } from "../lib/images";
+
+const packages = await Promise.all(
+  (await getCollection("packages"))
+    .sort((a, b) => a.data.order - b.data.order)
+    .map(async (p) => ({ ...p, photo: photoNamed("packages", p.id), ...(await render(p)) })),
+);
+---
+
+<Base
+  title="Services and Packages"
+  description="Decor for weddings, receptions, engagements, milestones, outdoor shoots, and corporate and seasonal events. Every package includes a custom design mockup, setup and takedown."
+>
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">Services</p>
+      <h1>All celebrations big or small. We do them all.</h1>
+      <p>
+        Every event starts with a custom designed mockup and ends with our crew taking everything down. Final pricing
+        depends on your venue, guest count and design, and we confirm it after your consultation.
+      </p>
+      <nav class="chips" aria-label="Packages">
+        {packages.map((p) => <a href={`#${p.id}`}>{p.data.title}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container packages">
+      {
+        packages.map((p) => (
+          <article id={p.id} class="package reveal">
+            <div class="package-photo">
+              {p.photo ? (
+                <Image src={p.photo.src} alt={p.photo.alt} widths={[500, 900]} sizes="(max-width: 800px) 100vw, 45vw" />
+              ) : (
+                <Placeholder label={p.data.title} hint={`Add src/assets/packages/${p.id}.jpg`} />
+              )}
+            </div>
+            <div class="package-body">
+              <h2>{p.data.title}</h2>
+              {p.data.startingPrice && <p class="price">Starting at ${p.data.startingPrice.toLocaleString("en-CA")}</p>}
+              <div class="prose">
+                <p.Content />
+              </div>
+              {p.data.functions.length > 0 && (
+                <>
+                  <h3 class="h4">Function by function</h3>
+                  <dl class="functions">
+                    {p.data.functions.map((f) => (
+                      <div>
+                        <dt>{f.name}</dt>
+                        <dd>{f.text}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </>
+              )}
+              {p.data.includes.length > 0 && (
+                <>
+                  <h3 class="h4">Includes</h3>
+                  <ul class="checklist">
+                    {p.data.includes.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              <a href="/contact/" class="btn btn-primary">Book a consultation</a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section tinted">
+    <div class="container narrow">
+      <div class="callout reveal">
+        <h2>Planning the whole week?</h2>
+        <p>
+          Book several events with us and one team designs every function, so the decor feels connected from start to
+          finish. Ask about wedding week bookings in your consultation.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <HowItWorks />
+
+  <section class="section tinted">
+    <div class="container narrow">
+      <div class="callout reveal">
+        <h2>Have questions?</h2>
+        <p>From deposits to venues to setup and takedown, we've answered the most common ones.</p>
+        <a href="/faq/" class="btn btn-primary">Read the FAQ</a>
+      </div>
+    </div>
+  </section>
+
+  <CallToAction />
+</Base>

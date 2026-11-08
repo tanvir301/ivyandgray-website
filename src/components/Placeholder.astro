@@ -1,0 +1,18 @@
+---
+// Shown wherever a photo hasn't been added yet. `hint` says which folder to drop it in.
+interface Props {
+  label: string;
+  hint?: string;
+  ratio?: string;
+  class?: string;
+}
+const { label, hint, ratio = "4 / 3", class: className = "" } = Astro.props;
+---
+
+<div class={`placeholder ${className}`} style={`aspect-ratio: ${ratio}`} role="img" aria-label={`${label} (photo coming soon)`}>
+  <svg viewBox="0 0 64 64" aria-hidden="true">
+    <path d="M32 58C32 40 30 22 18 8M32 58c0-14 4-28 16-40M24 30c-6-2-12 0-15 4 6 2 11 1 15-4Zm-2-11c-5-3-11-3-14 0 5 3 10 3 14 0Zm16 10c5-4 11-4 15-1-5 4-11 4-15 1Zm4-10c4-4 10-5 14-3-4 4-10 5-14 3ZM30 44c-6-1-11 2-13 6 6 1 10-1 13-6Zm4-1c6-2 11 0 14 4-6 2-10 0-14-4Z" />
+  </svg>
+  <span class="placeholder-label">{label}</span>
+  {hint && <span class="placeholder-hint">{hint}</span>}
+</div>

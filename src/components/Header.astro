@@ -1,0 +1,41 @@
+---
+const links = [
+  { href: "/services/", label: "Services" },
+  { href: "/portfolio/", label: "Portfolio" },
+  { href: "/about/", label: "About" },
+  { href: "/faq/", label: "FAQ" },
+];
+const path = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="header-logo" aria-label="Ivy and Gray home">
+      <img src="/logo-dark.svg" alt="Ivy and Gray, Event Decor and Design" width="142" height="80" />
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="menu-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Menu</span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Main">
+      {
+        links.map((l) => (
+          <a href={l.href} aria-current={path.startsWith(l.href) ? "page" : undefined}>
+            {l.label}
+          </a>
+        ))
+      }
+      <a href="/contact/" class="btn btn-primary btn-small">Book a consultation</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>(".menu-toggle")!;
+  const nav = document.getElementById("site-nav")!;
+  toggle.addEventListener("click", () => {
+    const open = toggle.getAttribute("aria-expanded") !== "true";
+    toggle.setAttribute("aria-expanded", String(open));
+    nav.classList.toggle("open", open);
+  });
+</script>

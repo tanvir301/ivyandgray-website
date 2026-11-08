@@ -1,0 +1,82 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Placeholder from "../components/Placeholder.astro";
+import CallToAction from "../components/CallToAction.astro";
+import { photosIn } from "../lib/images";
+
+// src/assets/about/: the first photo is the team, the second the warehouse or crew at work.
+const [teamPhoto, workPhoto] = photosIn("about");
+---
+
+<Base
+  title="About Us"
+  description="Ivy and Gray is a family-run event decor company. We design, build and install custom decor for South Asian weddings and celebrations with our own team, warehouse and trucks."
+>
+  <section class="page-head">
+    <div class="container">
+      <p class="eyebrow">About us</p>
+      <h1>A family business, built on referrals</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split">
+      <div class="split-media reveal">
+        {
+          teamPhoto ? (
+            <Image src={teamPhoto.src} alt={teamPhoto.alt} widths={[500, 900]} sizes="(max-width: 800px) 100vw, 45vw" />
+          ) : (
+            <Placeholder label="Our team" hint="Add a photo to src/assets/about/" ratio="4 / 5" />
+          )
+        }
+      </div>
+      <div class="split-body prose reveal">
+        <h2>Who we are</h2>
+        <p>
+          Ivy and Gray is a husband-and-wife team. One of us designs every event, from the first conversation to the
+          final mockup. The other runs the warehouse, the builds and the crew who bring each design to life.
+        </p>
+        <p>
+          We started by decorating for family and friends, and we've grown almost entirely through word of mouth. Our
+          families keep recommending us to their cousins, friends and neighbours, and that trust means everything to us.
+        </p>
+        <p>
+          We know how much a wedding week asks of a family. Our job is to take the decor off your plate completely, so
+          you can be present for every moment.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tinted">
+    <div class="container split reverse">
+      <div class="split-media reveal">
+        {
+          workPhoto ? (
+            <Image src={workPhoto.src} alt={workPhoto.alt} widths={[500, 900]} sizes="(max-width: 800px) 100vw, 45vw" />
+          ) : (
+            <Placeholder label="Our warehouse and crew" hint="Add a second photo to src/assets/about/" ratio="4 / 5" />
+          )
+        }
+      </div>
+      <div class="split-body prose reveal">
+        <h2>How we work</h2>
+        <h3 class="h4">We design it</h3>
+        <p>Every setup begins as a custom visual mockup, so you can see your decor, refine it and approve it ahead of time.</p>
+        <h3 class="h4">We build it</h3>
+        <p>
+          Our backdrops, stages and pieces are built, painted and stored in our own warehouse. We pack every setup from a
+          checklist, so nothing is forgotten on the day.
+        </p>
+        <h3 class="h4">We set it up and take it down</h3>
+        <p>
+          Our own crew and trucks handle every install and takedown, including late nights after receptions and jaggos.
+          No subcontractors, no surprises.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CallToAction heading="We'd love to hear about your celebration" />
+</Base>

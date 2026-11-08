@@ -1,0 +1,44 @@
+---
+interface Props {
+  tinted?: boolean;
+}
+const { tinted = false } = Astro.props;
+
+const steps = [
+  {
+    title: "Book a consultation",
+    text: "We confirm we're available and go over the details of your events, like the type of event, location and guest count. Share your inspiration with us, and we'll make sure we're the right fit for you.",
+  },
+  {
+    title: "Lock in your dates",
+    text: "A signed contract and deposit reserve your dates, so they're yours.",
+  },
+  {
+    title: "Six months before",
+    text: "We touch base to confirm your inspiration. Send us your outfits and we'll make sure everything matches.",
+  },
+  {
+    title: "One month before",
+    text: "We send you a custom mockup showing exactly how your setup will look. You can still change anything you need at this point.",
+  },
+];
+---
+
+<section id="how-it-works" class:list={["section", { tinted }]}>
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">How it works</p>
+      <h2>From first call to your custom mockup</h2>
+    </div>
+    <ol class="steps">
+      {
+        steps.map((s) => (
+          <li class="reveal">
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

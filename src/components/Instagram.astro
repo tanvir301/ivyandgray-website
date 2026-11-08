@@ -1,0 +1,27 @@
+---
+import { site, instagramUrl } from "../site.config";
+---
+
+{
+  (site.beholdFeedId || instagramUrl) && (
+    <section class="section instagram">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">On Instagram</p>
+          <h2>Our latest setups</h2>
+          {instagramUrl && (
+            <p>
+              <a href={instagramUrl} rel="noopener">Follow @{site.instagram}</a> for new work every week.
+            </p>
+          )}
+        </div>
+        {site.beholdFeedId && (
+          <>
+            <script type="module" src="https://w.behold.so/widget.js" />
+            <behold-widget feed-id={site.beholdFeedId} />
+          </>
+        )}
+      </div>
+    </section>
+  )
+}
